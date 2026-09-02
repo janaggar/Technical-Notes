@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Concurrent Algorithms — Unified Solutions</title>
+<style>
+@page { size: A4; margin: 1.7cm; }
+* { box-sizing: border-box; }
+body { font-family:'Segoe UI',Arial,sans-serif; line-height:1.5; color:#1a1a1a; max-width:900px; margin:0 auto; padding:24px; }
+h1 { color:#0b3d91; border-bottom:3px solid #0b3d91; padding-bottom:8px; margin-top:0; font-size:1.7em; }
+h2 { color:#0b3d91; margin-top:26px; border-left:6px solid #0b3d91; padding:8px 12px; background:#eef3fb; font-size:1.18em; }
+h3 { color:#11335c; margin-top:16px; margin-bottom:4px; font-size:1.04em; }
+p { margin:7px 0; }
+ul,ol { margin:7px 0 7px 4px; }
+li { margin:3px 0; }
+pre { background:#f5f7fa; border:1px solid #d9dee6; border-left:4px solid #0b3d91; padding:10px 14px; overflow-x:auto; font-family:'Consolas','Courier New',monospace; font-size:0.88em; border-radius:4px; line-height:1.4; }
+code { background:#eef; padding:1px 5px; border-radius:3px; font-family:'Consolas',monospace; font-size:0.92em; }
+table { border-collapse:collapse; width:100%; margin:12px 0; font-size:0.95em; }
+th,td { border:1px solid #bbb; padding:6px 10px; text-align:left; vertical-align:top; }
+th { background:#0b3d91; color:#fff; }
+tr:nth-child(even){ background:#f3f6fb; }
+.qbox { background:#eef3fb; border:1px solid #c7d6ef; border-radius:5px; padding:10px 14px; margin:22px 0 4px; }
+.qlabel { font-weight:700; color:#0b3d91; letter-spacing:.2px; }
+.rep { background:#fdecea; border-left:4px solid #d9534f; padding:6px 11px; margin:8px 0; font-size:0.9em; border-radius:3px; }
+.rep a { color:#b02a37; }
+.pslabel { font-weight:700; color:#0b3d91; margin:10px 0 2px; font-size:0.96em; }
+.key { background:#fff8e1; border-left:4px solid #f5a623; padding:6px 12px; margin:8px 0; border-radius:3px; display:inline-block; }
+div.key { display:block; }
+.complexity { font-weight:700; color:#0b3d91; }
+a { color:#0b3d91; text-decoration:none; }
+a:hover { text-decoration:underline; }
+section { margin-bottom:10px; }
+/* cover */
+.cover { text-align:center; padding:60px 20px 40px; border-bottom:none; }
+.cover h1 { border:none; color:#0b3d91; font-size:2.1em; margin-bottom:6px; }
+.cover .meta { color:#444; font-size:1.05em; margin-top:14px; line-height:1.7; }
+.cover .tag { display:inline-block; background:#0b3d91; color:#fff; padding:4px 14px; border-radius:20px; font-size:0.85em; margin-top:18px; }
+/* toc */
+.toc { background:#f7f9fc; border:1px solid #d9e2f0; border-radius:8px; padding:18px 26px; margin:24px 0; }
+.toc h2 { background:none; border:none; padding:0; margin:0 0 10px; }
+.toc ol { margin:0; }
+.toc a { font-weight:600; }
+.toc small { color:#666; font-weight:400; }
+.legend { font-size:0.88em; color:#555; margin-top:10px; }
+.pagebreak { page-break-before: always; }
+@media print {
+  body { padding:0; }
+  h2 { page-break-after:avoid; }
+  pre,table,svg { page-break-inside:avoid; }
+  .qbox { page-break-inside:avoid; }
+  a { color:#0b3d91; }
+}
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <h1>Concurrent Algorithms &amp; Data Structures</h1>
+  <div style="font-size:1.25em;color:#11335c;font-weight:600;">Unified Solutions Study Guide</div>
+  <div class="meta">
+    Alexandria University &middot; Intelligent Systems &middot; Course 01414-24-022<br>
+    Combines: <strong>Final Exam Fall 2022/2023</strong>, <strong>Final Exam Fall 2024/2025</strong>,<br>and the <strong>Sample Problems sheet</strong> (+ Suggested Final Problems)
+  </div>
+  <div class="tag">Each algorithm: plain-text explanation first, then suggested pseudocode</div>
+</div>
+
+<div class="toc pagebreak">
+  <h2>Contents</h2>
+  <ol>
+    <li><a href="#final2223">Section 1 — Final Exam, Fall 2022/2023</a> <small>(Q1–Q10)</small></li>
+    <li><a href="#final2425">Section 2 — Final Exam, Fall 2024/2025</a> <small>(Q1–Q10)</small></li>
+    <li><a href="#sample">Section 3 — Sample Problems &amp; Suggested Finals</a> <small>(Q1–Q3, items a–r, + 32 finals)</small></li>
+  </ol>
+  <div class="legend">
+    <strong>How to read:</strong> every algorithm/coding question is explained in plain words first, then followed by a
+    <em>Suggested pseudocode solution</em>. A <span style="background:#fdecea;border-left:3px solid #d9534f;padding:1px 6px;">red note</span>
+    marks a question that repeats one already answered earlier and links to the full answer.
+    <br><strong>To save as PDF:</strong> open this file in a browser and press Ctrl/Cmd&nbsp;+&nbsp;P → "Save as PDF".
+  </div>
+</div>
+
+<div class="pagebreak"></div>
+
+<section id="final2223">
+<h1>Section 1 — Final Exam, Fall 2022/2023</h1>
+
+<!-- ================= Q1 ================= -->
+<div class="qbox"><span class="qlabel">Question 1 (10 pts)</span><br>
+Answer the following theory questions:
+<ol type="a">
+<li>What are Sequential Algorithms?</li>
+<li>What are Parallel Algorithms? What is the Efficiency of a parallel algorithm?</li>
+<li>How to measure an algorithm's running time?</li>
+<li>Define thread and multithreading.</li>
+<li>What is the difference between a thread and a process?</li>
+<li>What is the difference between concurrency and parallelism?</li>
+</ol>
+</div>
+
+<h2 id="s1q1">Question 1 — Theory: sequential vs parallel, threads, concurrency</h2>
+
+<h3>a) Sequential Algorithms</h3>
+<p>A sequential algorithm executes one operation at a time on a single processor. The steps are strictly ordered, so each instruction must finish before the next one begins. There is no overlap of work — total time is simply the sum of the individual step costs.</p>
+
+<h3>b) Parallel Algorithms &amp; Efficiency</h3>
+<p>A parallel algorithm splits the work across multiple processors or cores that run simultaneously, so several operations execute at the same instant. The goal is to reduce wall-clock time by doing independent pieces of work concurrently.</p>
+<p><b>Efficiency</b> measures how well the processors are actually used:</p>
+<div class="key">E = Speedup / p = T<sub>1</sub> / (p &middot; T<sub>p</sub>)</div>
+<p>where T<sub>1</sub> is the sequential time, T<sub>p</sub> the time on <i>p</i> processors. It is a value between 0 and 1 giving the fraction of the total processor power that is usefully employed (1 = perfect, ideal speedup).</p>
+
+<h3>c) Measuring running time</h3>
+<p>The standard approach is asymptotic analysis: count the number of basic operations as a function of the input size <i>n</i> and express it with big-O notation (<span class="complexity">O(&middot;)</span>), distinguishing worst-case, average-case, and best-case. Alternatively one can measure empirically by timing the program on real inputs, but asymptotic analysis is machine-independent and preferred.</p>
+
+<h3>d) Thread and multithreading</h3>
+<p>A <b>thread</b> is the lightest unit of execution within a process: it has its own stack, registers, and program counter, but shares the process's memory (code, heap, globals) with the other threads. <b>Multithreading</b> means having multiple threads inside one process running concurrently, allowing the program to do several things at once while sharing data cheaply.</p>
+
+<h3>e) Thread vs process</h3>
+<p>A <b>process</b> is an independent program in execution with its own private address space; it is isolated from other processes. A <b>thread</b> lives inside a process and shares that process's memory with its sibling threads. Consequently threads are much cheaper to create and to communicate between (shared memory), whereas a process is heavier and isolated.</p>
+
+<h3>f) Concurrency vs parallelism</h3>
+<p><b>Concurrency</b> is dealing with many tasks by interleaving them — they make progress by being time-sliced, which can happen even on a single core; it is about the <i>structure</i> of the program. <b>Parallelism</b> is actually executing many tasks at the very same instant on multiple cores; it is about <i>execution</i>. You can have concurrency without parallelism, but parallelism requires multiple processing units.</p>
+
+<!-- ================= Q2 ================= -->
+<div class="qbox"><span class="qlabel">Question 2 (10 pts)</span><br>
+Answer Yes/No with a brief explanation:
+<ol type="a">
+<li>Is it necessary for threads in a process to have separate stacks?</li>
+<li>Is it necessary for threads in a process to have separate copies of the program executable?</li>
+<li>Can one have concurrent execution without parallelism? If yes, describe how.</li>
+<li>A multithreaded webserver runs on N cores with M worker threads and is fully saturated. Under which circumstances does increasing M raise the saturation throughput?</li>
+<li>A process spawns 10 user-level threads mapped onto 2 kernel threads, on an 8-core system. What is the maximum number of threads that can execute in parallel?</li>
+</ol>
+</div>
+
+<h2 id="s1q2">Question 2 — Threads: stacks, sharing, saturation, mapping</h2>
+
+<h3>a) Separate stacks?</h3>
+<p><span class="key">Yes.</span> Each thread runs its own sequence of function calls, so it needs its own private call stack to hold its local variables, return addresses, and parameters. Sharing one stack would corrupt every thread's call chain.</p>
+
+<h3>b) Separate copies of the executable?</h3>
+<p><span class="key">No.</span> All threads of a process share the single code image (the text segment) loaded once into the process's address space. Only the per-thread state (stack, registers, PC) is private.</p>
+
+<h3>c) Concurrency without parallelism?</h3>
+<p><span class="key">Yes.</span> On a single core, the scheduler time-slices among threads, rapidly switching between them so they all make progress in an interleaved fashion. This gives concurrency (overlapping logical progress) without parallelism (no two instructions run at the same physical instant).</p>
+
+<h3>d) When does increasing M raise saturation throughput?</h3>
+<p>Only when the worker threads spend time <b>blocked</b> — for example waiting on I/O, disk, or the network. Extra threads can then run on the cores that would otherwise sit idle during those stalls, keeping the CPUs busy. If the workload is already CPU-bound with about M &asymp; N busy threads, adding more threads only adds context-switch and contention overhead and gives <b>no</b> throughput gain.</p>
+
+<h3>e) Maximum threads in parallel?</h3>
+<p><span class="key">2.</span> Parallelism is bounded by the number of kernel threads, because the kernel only schedules those onto cores. With just 2 kernel threads, at most 2 user threads can run at the same instant — independent of the 10 user threads or the 8 cores available.</p>
+
+<!-- ================= Q3 ================= -->
+<div class="qbox"><span class="qlabel">Question 3 (5 pts)</span><br>
+How to make Merge Sort Concurrent? (Hint: sort the two halves concurrently.)
+</div>
+
+<h2 id="s1q3">Question 3 — Concurrent Merge Sort</h2>
+<p>Merge sort already splits the array recursively into two halves, sorts each half, then merges the two sorted halves. The two recursive sorts are completely independent — neither reads the other's data — so they can be done in <b>parallel</b> instead of one after the other.</p>
+<p>The idea: at each recursive level, <b>fork</b> a separate thread/task to sort the left half while the current thread sorts the right half, then <b>join</b> (wait for both) and perform the sequential merge. To avoid the overhead of creating threads for tiny subarrays, switch to a plain sequential sort below a small cutoff size.</p>
+<p>The total work stays <span class="complexity">O(n log n)</span> (the same number of comparisons), but the parallel span/depth drops to <span class="complexity">O(n)</span> when the merge is sequential (the merge of the top level alone costs O(n)). If the merge step is also parallelized, the span improves to <span class="complexity">O(log<sup>2</sup>n)</span>.</p>
+
+<p class="pslabel">Suggested pseudocode solution</p>
+<pre>
+parallelMergeSort(A, lo, hi):
+    if hi - lo &lt;= CUTOFF:
+        sequentialSort(A, lo, hi)        // small subarray
+        return
+    mid = (lo + hi) / 2
+    fork  parallelMergeSort(A, lo, mid)  // sort left half in a new task
+    do    parallelMergeSort(A, mid, hi)  // sort right half here
+    join                                 // wait for the left task
+    merge(A, lo, mid, hi)                // combine the two sorted halves
+</pre>
+
+<!-- ================= Q4 ================= -->
+<div class="qbox"><span class="qlabel">Question 4 (5 pts)</span><br>
+There are n people, each of whom knows one unique scandal that nobody else knows. Whenever two of them call each other, they exchange ALL the scandals they currently know. What is the minimum number of calls needed so that everyone knows all scandals?
+</div>
+
+<h2 id="s1q4">Question 4 — The Gossip Problem</h2>
+<p>This is the classic gossip (telephone) problem. For n &ge; 4 the minimum number of calls is:</p>
+<div class="key">2n &minus; 4 calls</div>
+<p><b>Strategy.</b> Choose 4 "core" people. The work is done in three phases:</p>
+<ul>
+<li><b>Gather in (n&minus;4 calls):</b> each of the other n&minus;4 outsiders calls a core person, dumping their scandal into the core group.</li>
+<li><b>Core exchange (4 calls):</b> the 4 core people gossip among themselves (e.g., two pairs swap, then the partners swap) so that all 4 end up knowing every scandal.</li>
+<li><b>Spread out (n&minus;4 calls):</b> each of the n&minus;4 outsiders is called back by a core person and receives the complete set.</li>
+</ul>
+<p>Total = (n&minus;4) + 4 + (n&minus;4) = <b>2n &minus; 4</b>.</p>
+<p><b>Small cases:</b> n=1 &rarr; 0, n=2 &rarr; 1, n=3 &rarr; 3, n=4 &rarr; 4.</p>
+<p><b>Lower-bound intuition:</b> every outsider must take part in at least two calls — one to send their scandal into the group and one to receive everything back — which forces roughly 2n calls, and the 2n&minus;4 schedule meets this bound.</p>
+
+<p class="pslabel">Suggested pseudocode solution</p>
+<pre>
+gossip(people[1..n]):                    // assume n &gt;= 4
+    core = {p1, p2, p3, p4}
+    others = {p5, ..., pn}
+
+    for each x in others:                // phase 1: gather in (n-4 calls)
+        call(x, p1)                       // x dumps its scandal into core
+
+    call(p1, p2); call(p3, p4)           // phase 2: core exchange (4 calls)
+    call(p1, p3); call(p2, p4)           // now all 4 core know everything
+
+    for each x in others:                // phase 3: spread out (n-4 calls)
+        call(p1, x)                       // x receives the full set
+    // total = (n-4) + 4 + (n-4) = 2n - 4
+</pre>
+
+<!-- ================= Q5 ================= -->
+<div class="qbox"><span class="qlabel">Question 5 (5 pts)</span><br>
+An array of N processors is given, where each processor holds a number from the array A[n] (N = n). Write a parallel algorithm to search for a value x. Give the time complexity, speedup, and efficiency.
+</div>
+
+<h2 id="s1q5">Question 5 — Parallel Search on N Processors</h2>
+<p><b>Idea.</b> Broadcast the search key x to all N processors. Each processor i compares its own element A[i] with x in <span class="complexity">O(1)</span>, all at the same time, and sets a found flag if it matches. Finally combine all the flags with an OR to learn whether any processor found x.</p>
+<p><b>Complexity.</b> The local comparison is O(1). The combine step depends on the model: on a CRCW PRAM the OR can be done in <span class="complexity">O(1)</span> (many processors write to one location simultaneously), giving total <span class="complexity">O(1)</span> time; on an EREW PRAM or a tree reduction the OR takes <span class="complexity">O(log n)</span>, giving total <span class="complexity">O(log n)</span>.</p>
+<p><b>Speedup &amp; efficiency.</b> Sequential search is <span class="complexity">O(n)</span>. So speedup is O(n) (or n/log n for the tree combine), and efficiency = Speedup/p. With the O(1) result and p = n processors, efficiency is <span class="complexity">O(1/n)</span> — very low, because most processors do one comparison then sit idle. This is the classic time-vs-work trade-off: extremely fast but not work-efficient.</p>
+
+<p class="pslabel">Suggested pseudocode solution</p>
+<pre>
+parallelSearch(A[0..n-1], x):
+    broadcast x to all processors
+    for each processor i in parallel:    // O(1)
+        flag[i] = (A[i] == x)            // true only if this cell matches
+    found = OR(flag[0..n-1])             // O(1) CRCW  /  O(log n) tree
+    return found
+</pre>
+
+<!-- ================= Q6 ================= -->
+<div class="qbox"><span class="qlabel">Question 6 (5 pts)</span><br>
+For the recurrence f(n) = 4 f(n/2) + 1, how many subproblems are there and what is their size? Give the complexity.
+</div>
+
+<h2 id="s1q6">Question 6 — Recurrence f(n)=4f(n/2)+1</h2>
+<p>Writing the recurrence in the standard divide-and-conquer form T(n) = a&middot;T(n/b) + f(n), we read off <b>a = 4</b> and <b>b = 2</b>. So the problem is split into <b>4 subproblems</b>, each of <b>size n/2</b>, with an O(1) combine cost.</p>
+<p>By the Master Theorem, compare the driving term with n<sup>log<sub>b</sub>a</sup> = n<sup>log<sub>2</sub>4</sup> = n<sup>2</sup>. Since the constant term O(1) is much smaller than n<sup>2</sup>, the recursion-tree leaves dominate (Case 1):</p>
+<div class="key">f(n) = <span class="complexity">Θ(n<sup>2</sup>)</span></div>
+
+<!-- ================= Q7 ================= -->
+<div class="qbox"><span class="qlabel">Question 7 (5 pts)</span><br>
+Determine whether a value x is stored in one of the processors of a 4&times;4 mesh. The value x is entered and the answer is returned at processor P(0,0). For the mesh shown: x = 21 &rarr; yes; x = 2 &rarr; no.
+<br><br>
+<svg viewBox="0 0 290 290" width="270" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
+  <defs>
+    <marker id="ah1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#333"/>
+    </marker>
+  </defs>
+  <line x1="5" y1="10" x2="35" y2="35" stroke="#333" stroke-width="2" marker-end="url(#ah1)"/>
+  <text x="2" y="8" font-size="14" font-style="italic">x</text>
+  <g stroke="#333" stroke-width="1.5">
+    <rect x="35"  y="35"  width="55" height="55" fill="#eef4ff"/>
+    <rect x="90"  y="35"  width="55" height="55" fill="#eef4ff"/>
+    <rect x="145" y="35"  width="55" height="55" fill="#eef4ff"/>
+    <rect x="200" y="35"  width="55" height="55" fill="#eef4ff"/>
+    <rect x="35"  y="90"  width="55" height="55" fill="#eef4ff"/>
+    <rect x="90"  y="90"  width="55" height="55" fill="#eef4ff"/>
+    <rect x="145" y="90"  width="55" height="55" fill="#eef4ff"/>
+    <rect x="200" y="90"  width="55" height="55" fill="#eef4ff"/>
+    <rect x="35"  y="145" width="55" height="55" fill="#eef4ff"/>
+    <rect x="90"  y="145" width="55" height="55" fill="#eef4ff"/>
+    <rect x="145" y="145" width="55" height="55" fill="#dff5e1"/>
+    <rect x="200" y="145" width="55" height="55" fill="#eef4ff"/>
+    <rect x="35"  y="200" width="55" height="55" fill="#eef4ff"/>
+    <rect x="90"  y="200" width="55" height="55" fill="#eef4ff"/>
+    <rect x="145" y="200" width="55" height="55" fill="#eef4ff"/>
+    <rect x="200" y="200" width="55" height="55" fill="#eef4ff"/>
+  </g>
+  <g font-size="16" text-anchor="middle" fill="#222">
+    <text x="62"  y="68">42</text><text x="117" y="68">53</text><text x="172" y="68">16</text><text x="227" y="68">8</text>
+    <text x="62"  y="123">41</text><text x="117" y="123">9</text><text x="172" y="123">11</text><text x="227" y="123">67</text>
+    <text x="62"  y="178">29</text><text x="117" y="178">13</text><text x="172" y="178" font-weight="bold">21</text><text x="227" y="178">5</text>
+    <text x="62"  y="233">10</text><text x="117" y="233">22</text><text x="172" y="233">49</text><text x="227" y="233">3</text>
+  </g>
+</svg>
+</div>
+
+<h2 id="s1q7">Question 7 — Membership Search on a 4&times;4 Mesh</h2>
+<p><b>Idea.</b> The query enters at P(0,0). First broadcast x to every processor: send it across the top row, then down each column. On a 4&times;4 mesh this takes O(4) = O(&radic;n) steps. Each processor then compares x against its stored value in O(1) and produces a boolean. Finally OR-reduce all the booleans back to P(0,0) (up the columns and along the top row), again in O(&radic;n) steps. P(0,0) reports "yes" if any processor matched.</p>
+<p>For a &radic;n &times; &radic;n mesh holding n processors, the total time is <span class="complexity">O(&radic;n)</span>.</p>
+<p><b>Results for this mesh:</b> x = 21 is held by processor P(2,2), so the answer is <span class="key">yes</span>. x = 2 appears nowhere, so the answer is <span class="key">no</span>.</p>
+
+<p class="pslabel">Suggested pseudocode solution</p>
+<pre>
+meshSearch(x):                           // entered at P(0,0)
+    // 1. broadcast  -- O(sqrt n)
+    P(0,0) sends x along row 0
+    each P(0,j) sends x down its column   // every P(i,j) now has x
+
+    // 2. local compare -- O(1)
+    for each P(i,j) in parallel:
+        match(i,j) = ( value(i,j) == x )
+
+    // 3. OR-reduce back to P(0,0) -- O(sqrt n)
+    reduce match up the columns then along row 0 with OR
+    return result at P(0,0)              // yes if any match
+</pre>
+
+<!-- ================= Q8 ================= -->
+<div class="qbox"><span class="qlabel">Question 8 (5 pts)</span><br>
+On a 4&times;4 mesh, compute the prefix sums in place in row-major order: each processor receives the sum of all original values that come before it in row-major order (plus its own). Example:
+<br><br>
+<span style="display:inline-block;vertical-align:top;text-align:center;margin-right:20px">
+<svg viewBox="0 0 230 245" width="210" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
+  <g stroke="#333" stroke-width="1.5" fill="#fff4e6">
+    <rect x="5"   y="5"   width="50" height="50"/><rect x="55"  y="5"   width="50" height="50"/><rect x="105" y="5"   width="50" height="50"/><rect x="155" y="5"   width="50" height="50"/>
+    <rect x="5"   y="55"  width="50" height="50"/><rect x="55"  y="55"  width="50" height="50"/><rect x="105" y="55"  width="50" height="50"/><rect x="155" y="55"  width="50" height="50"/>
+    <rect x="5"   y="105" width="50" height="50"/><rect x="55"  y="105" width="50" height="50"/><rect x="105" y="105" width="50" height="50"/><rect x="155" y="105" width="50" height="50"/>
+    <rect x="5"   y="155" width="50" height="50"/><rect x="55"  y="155" width="50" height="50"/><rect x="105" y="155" width="50" height="50"/><rect x="155" y="155" width="50" height="50"/>
+  </g>
+  <g font-size="16" text-anchor="middle" fill="#222">
+    <text x="30"  y="36">1</text><text x="80"  y="36">2</text><text x="130" y="36">3</text><text x="180" y="36">5</text>
+    <text x="30"  y="86">4</text><text x="80"  y="86">3</text><text x="130" y="86">1</text><text x="180" y="86">2</text>
+    <text x="30"  y="136">5</text><text x="80"  y="136">4</text><text x="130" y="136">2</text><text x="180" y="136">3</text>
+    <text x="30"  y="186">1</text><text x="80"  y="186">2</text><text x="130" y="186">4</text><text x="180" y="186">3</text>
+  </g>
+  <text x="105" y="230" text-anchor="middle" font-size="14" font-weight="bold">Original</text>
+</svg>
+</span>
+<span style="display:inline-block;vertical-align:top;text-align:center">
+<svg viewBox="0 0 230 245" width="210" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
+  <g stroke="#333" stroke-width="1.5" fill="#e6f4ea">
+    <rect x="5"   y="5"   width="50" height="50"/><rect x="55"  y="5"   width="50" height="50"/><rect x="105" y="5"   width="50" height="50"/><rect x="155" y="5"   width="50" height="50"/>
+    <rect x="5"   y="55"  width="50" height="50"/><rect x="55"  y="55"  width="50" height="50"/><rect x="105" y="55"  width="50" height="50"/><rect x="155" y="55"  width="50" height="50"/>
+    <rect x="5"   y="105" width="50" height="50"/><rect x="55"  y="105" width="50" height="50"/><rect x="105" y="105" width="50" height="50"/><rect x="155" y="105" width="50" height="50"/>
+    <rect x="5"   y="155" width="50" height="50"/><rect x="55"  y="155" width="50" height="50"/><rect x="105" y="155" width="50" height="50"/><rect x="155" y="155" width="50" height="50"/>
+  </g>
+  <g font-size="15" text-anchor="middle" fill="#222">
+    <text x="30"  y="36">1</text><text x="80"  y="36">3</text><text x="130" y="36">6</text><text x="180" y="36">11</text>
+    <text x="30"  y="86">15</text><text x="80"  y="86">18</text><text x="130" y="86">19</text><text x="180" y="86">21</text>
+    <text x="30"  y="136">26</text><text x="80"  y="136">30</text><text x="130" y="136">32</text><text x="180" y="136">35</text>
+    <text x="30"  y="186">36</text><text x="80"  y="186">38</text><text x="130" y="186">42</text><text x="180" y="186">45</text>
+  </g>
+  <text x="105" y="230" text-anchor="middle" font-size="14" font-weight="bold">Prefix sums</text>
+</svg>
+</span>
+</div>
+
+<h2 id="s1q8">Question 8 — Prefix Sums on a 4&times;4 Mesh</h2>
+<p><b>Idea.</b> Treat the mesh as a single sequence in row-major order (left to right, top to bottom) and replace each cell with the cumulative running total up to and including itself. For instance the first cell of row 1 becomes 15 = 11 + 4 (everything in row 0 plus its own value), and the bottom-right cell becomes 45, the grand total.</p>
+<p><b>Parallel method (three phases):</b></p>
+<ul>
+<li><b>Row prefix:</b> compute a prefix sum independently within each row, in parallel — O(&radic;n).</li>
+<li><b>Column carry:</b> take each row's total (its last element) and compute a prefix sum down the first column, so each row learns the offset (sum of all earlier rows) — O(&radic;n).</li>
+<li><b>Add offset:</b> broadcast each row's incoming offset across that row and add it to every element — O(&radic;n).</li>
+</ul>
+<p>Total time on a &radic;n &times; &radic;n mesh is <span class="complexity">O(&radic;n)</span>.</p>
+
+<p class="pslabel">Suggested pseudocode solution</p>
+<pre>
+meshPrefixSums():
+    // phase 1: prefix sum inside each row  (parallel over rows)
+    for each row i in parallel:
+        rowPrefix(i)                      // A[i][j] += A[i][j-1]
+        rowTotal[i] = A[i][last]
+
+    // phase 2: prefix sum of row totals down column 0
+    offset[0] = 0
+    for i = 1 to sqrt(n)-1:
+        offset[i] = offset[i-1] + rowTotal[i-1]
+
+    // phase 3: add each row's offset to all its cells
+    for each row i in parallel:
+        for each j in parallel:
+            A[i][j] += offset[i]
+</pre>
+
+<!-- ================= Q9 ================= -->
+<div class="qbox"><span class="qlabel">Question 9 (5 pts)</span><br>
+A d-dimensional hypercube has 2<sup>d</sup> nodes. Write a procedure to broadcast an element in a 2-dimensional hypercube.
+<br><br>
+<svg viewBox="0 0 260 220" width="250" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
+  <g stroke="#555" stroke-width="1.5" fill="none">
+    <line x1="70" y1="40"  x2="200" y2="40"/>
+    <line x1="200" y1="40" x2="200" y2="130"/>
+    <line x1="200" y1="130" x2="70" y2="130"/>
+    <line x1="70" y1="130" x2="70" y2="40"/>
+    <line x1="30" y1="80"  x2="160" y2="80"/>
+    <line x1="160" y1="80" x2="160" y2="170"/>
+    <line x1="160" y1="170" x2="30" y2="170"/>
+    <line x1="30" y1="170" x2="30" y2="80"/>
+    <line x1="70" y1="40"  x2="30" y2="80"/>
+    <line x1="200" y1="40" x2="160" y2="80"/>
+    <line x1="200" y1="130" x2="160" y2="170"/>
+    <line x1="70" y1="130" x2="30" y2="170"/>
+  </g>
+  <g stroke="#333" stroke-width="1.5" fill="#eef4ff">
+    <circle cx="70"  cy="40"  r="16"/>
+    <circle cx="200" cy="40"  r="16"/>
+    <circle cx="200" cy="130" r="16"/>
+    <circle cx="70"  cy="130" r="16"/>
+    <circle cx="30"  cy="80"  r="16"/>
+    <circle cx="160" cy="80"  r="16"/>
+    <circle cx="160" cy="170" r="16"/>
+    <circle cx="30"  cy="170" r="16"/>
+  </g>
+  <g font-size="11" text-anchor="middle" fill="#222">
+    <text x="70"  y="44">010</text>
+    <text x="200" y="44">110</text>
+    <text x="200" y="134">100</text>
+    <text x="70"  y="134">000</text>
+    <text x="30"  y="84">011</text>
+    <text x="160" y="84">111</text>
+    <text x="160" y="174">101</text>
+    <text x="30"  y="174">001</text>
+  </g>
+</svg>
+</div>
+
+<h2 id="s1q9">Question 9 — Hypercube Broadcast</h2>
+<p><b>Idea.</b> A hypercube broadcast proceeds dimension by dimension. The source first sends the element to its neighbour along dimension 0 (the node differing in bit 0); then in the next round every informed node sends along dimension 1; and so on. Because the number of nodes that know the value <b>doubles</b> each round, after d rounds all 2<sup>d</sup> nodes have it. This costs <span class="complexity">O(d) = O(log P)</span> steps.</p>
+<p><b>2-D hypercube (4 nodes 00, 01, 10, 11):</b></p>
+<ul>
+<li><b>Step 1 (bit 0):</b> node 00 sends to 01.</li>
+<li><b>Step 2 (bit 1):</b> 00 &rarr; 10 and 01 &rarr; 11 in parallel.</li>
+</ul>
+<p>Done in 2 steps, all 4 nodes informed.</p>
+
+<p class="pslabel">Suggested pseudocode solution</p>
+<pre>
+hypercubeBroadcast(source, d):
+    informed = { source }
+    for k = 0 to d-1:                     // one round per dimension
+        for each node u in informed in parallel:
+            v = u XOR (1 &lt;&lt; k)            // neighbour differing in bit k
+            send element from u to v
+            add v to informed
+    // after d rounds all 2^d nodes have the element
+</pre>
+
+<!-- ================= Q10 ================= -->
+<div class="qbox"><span class="qlabel">Question 10 (5 pts)</span><br>
+Write a parallel algorithm for 2 processors that merges two sorted arrays A and B into a single sorted array C. Give the complexity and the efficiency.
+</div>
+
+<h2 id="s1q10">Question 10 — Two-Processor Merge</h2>
+<p><b>Idea.</b> The two arrays together hold 2n elements. Find the <b>median</b> of the combined set, which splits the merge into a lower half and an upper half of equal size that do not overlap. Processor 1 merges the elements below the median into the front part of C, while processor 2 merges the elements above the median into the back part of C. Because the two output regions of C are disjoint and the input ranges are determined in advance, the processors never coordinate during the merge.</p>
+<p><b>Complexity.</b> Finding the split point via the two-array median is <span class="complexity">O(log n)</span> (binary search across both arrays). Each processor then merges at most n elements in <span class="complexity">O(n)</span>. So the parallel time is</p>
+<div class="key">T<sub>2</sub>(n) = O(n/2 + log n) &asymp; <span class="complexity">O(n/2)</span></div>
+<p><b>Speedup &amp; efficiency.</b> The sequential merge is O(n), so speedup &asymp; 2&times; over the sequential algorithm. Efficiency = Speedup / 2 &asymp; near 1 for large n, since the only overhead is the O(log n) median computation, which is negligible compared with the O(n) merge work.</p>
+
+<p class="pslabel">Suggested pseudocode solution</p>
+<pre>
+parallelMerge2(A[0..n-1], B[0..n-1], C[0..2n-1]):
+    // find the split: how many of the smallest n elements come from A vs B
+    (ia, ib) = twoArrayMedianSplit(A, B)  // O(log n)
+
+    // processor 1: merge the lower half into C[0 .. n-1]
+    P1: merge A[0..ia-1] with B[0..ib-1]  -&gt; C[0 .. n-1]
+
+    // processor 2: merge the upper half into C[n .. 2n-1]
+    P2: merge A[ia..n-1] with B[ib..n-1]  -&gt; C[n .. 2n-1]
+
+    // both write disjoint regions of C, no synchronization needed
+</pre>
+
+</section>
+
+<div class="pagebreak"></div>
+
+<section id="final2425">
+<h1>Section 2 — Final Exam, Fall 2024/2025</h1>
+
+<!-- ============================= Q1 ============================= -->
+<div class="qbox">
+<span class="qlabel">Question 1 (10 pts)</span><br>
+Theory.
+<ol type="a">
+<li>What is the primary goal of concurrent programming?</li>
+<li>What are Parallel Algorithms? What is the efficiency of a parallel algorithm?</li>
+<li>Define a thread and multithreading.</li>
+<li>What is the difference between a thread and a process?</li>
+<li>What is the difference between concurrency and parallelism?</li>
+<li>Define the four conditions necessary for a deadlock, and propose a strategy to prevent deadlock where processes share resources.</li>
+</ol>
+</div>
+
+<h2 id="s2q1">Question 1 — Concurrency theory and deadlock</h2>
+
+<h3>a) Primary goal of concurrent programming</h3>
+<p>The primary goal is to structure a program as multiple tasks that make progress together, so the program is more <strong>responsive</strong>, achieves higher <strong>throughput</strong>, and makes better <strong>utilization</strong> of multi-core hardware — all while correctly coordinating access to shared state so results stay consistent.</p>
+<div class="key">Goal: organize work as cooperating tasks for responsiveness, throughput and full use of available cores, with correct synchronization of shared data.</div>
+
+<h3>b) Parallel algorithms and efficiency</h3>
+<p class="rep">↺ <strong>Repeated</strong> — also answered in <a href="#s1q1">Final 2022/23 · Q1(b)</a>.</p>
+<p>A <strong>parallel algorithm</strong> is one designed so that several operations run at the same time on multiple processing units. The work is split into subtasks that execute simultaneously and whose partial results are combined into the final answer.</p>
+<p><strong>Efficiency</strong> measures how well the processors are used. With sequential time T<sub>1</sub> and parallel time T<sub>p</sub> on p processors:</p>
+<div class="key">Speedup S = T<sub>1</sub> / T<sub>p</sub> &nbsp;·&nbsp; Efficiency E = T<sub>1</sub> / (p · T<sub>p</sub>) = S / p. E = 1 (100%) is ideal/linear; real values are lower due to overhead and the sequential fraction.</div>
+
+<h3>c) Thread and multithreading</h3>
+<p class="rep">↺ <strong>Repeated</strong> — also answered in <a href="#s1q1">Final 2022/23 · Q1(d)</a>.</p>
+<p>A <strong>thread</strong> is the smallest unit of execution scheduled by the OS: a single sequential flow of control with its own program counter, registers and stack, but sharing the code, heap and open files of its process. <strong>Multithreading</strong> is running several threads within one process concurrently, letting them share memory while making independent progress (and running truly in parallel on multiple cores).</p>
+
+<h3>d) Thread vs process</h3>
+<p class="rep">↺ <strong>Repeated</strong> — also answered in <a href="#s1q1">Final 2022/23 · Q1(e)</a>.</p>
+<ul>
+<li>A <strong>process</strong> has its own private address space; threads of the same process <strong>share</strong> the address space (heap, globals, files).</li>
+<li>A process is heavier to create and switch; a thread is lightweight, since less state must be saved/restored.</li>
+<li>Inter-process communication needs OS mechanisms (pipes, shared memory); threads communicate directly through shared variables, which is fast but needs synchronization.</li>
+<li>A crash in one process is isolated; a misbehaving thread can corrupt the whole process.</li>
+</ul>
+
+<h3>e) Concurrency vs parallelism</h3>
+<p class="rep">↺ <strong>Repeated</strong> — also answered in <a href="#s1q1">Final 2022/23 · Q1(f)</a>.</p>
+<p><strong>Concurrency</strong> is about <em>dealing with</em> many tasks at once: structuring a program so multiple tasks are in progress and interleaved — possible even on a single core via time-slicing. <strong>Parallelism</strong> is about <em>doing</em> many tasks at the same instant on multiple cores. Concurrency is a design/structuring concept; parallelism is a hardware execution concept. Code can be concurrent without being parallel, and parallel execution is one way to run concurrent tasks.</p>
+
+<h3>f) The four deadlock conditions and a prevention strategy</h3>
+<p>All four <strong>Coffman conditions</strong> must hold simultaneously for a deadlock:</p>
+<ul>
+<li><strong>Mutual Exclusion</strong> — at least one resource is held in a non-shareable mode.</li>
+<li><strong>Hold and Wait</strong> — a process holds a resource while waiting to acquire others.</li>
+<li><strong>No Preemption</strong> — resources cannot be forcibly taken; they are released only voluntarily.</li>
+<li><strong>Circular Wait</strong> — a cycle of processes exists, each waiting for a resource held by the next.</li>
+</ul>
+<p><strong>Prevention strategy:</strong> break one of the four conditions. The most practical for shared resources is to impose a <strong>global lock ordering</strong> — every process must acquire resources in the same fixed total order. This makes a circular wait impossible, so deadlock cannot form. Alternatives: request <em>all</em> resources at once (breaks hold-and-wait), allow <em>preemption</em> of held resources, or use the <strong>Banker's algorithm</strong> for deadlock avoidance (grant a request only if a safe state remains).</p>
+<div class="key">Four conditions: Mutual Exclusion, Hold-and-Wait, No Preemption, Circular Wait. Prevent most simply by enforcing a single global resource-ordering (eliminates circular wait).</div>
+
+<!-- ============================= Q2 ============================= -->
+<div class="qbox">
+<span class="qlabel">Question 2 (10 pts)</span><br>
+Give a brief explanation for each.
+<ol type="a">
+<li>Why do threads need separate stacks?</li>
+<li>Can you have concurrency without parallelism?</li>
+<li>A webserver runs on a machine with N cores and a pool of M worker threads and is saturated. When does raising M increase the saturation throughput?</li>
+<li>You have 10 user threads mapped onto 2 kernel threads, on an 8-core system. What is the maximum number that can run in parallel?</li>
+</ol>
+</div>
+
+<h2 id="s2q2">Question 2 — Short concurrency explanations</h2>
+
+<h3>a) Separate stacks for threads</h3>
+<p class="rep">↺ <strong>Repeated</strong> — also answered in <a href="#s1q2">Final 2022/23 · Q2(a)</a>.</p>
+<p><strong>Yes</strong> — each thread executes its own independent call chain, so it needs its own stack to hold its local variables, parameters, return addresses and saved registers. A single shared stack would corrupt these frames as threads call functions at different times. Separate stacks keep each thread's control flow private and correct.</p>
+
+<h3>b) Concurrency without parallelism</h3>
+<p class="rep">↺ <strong>Repeated</strong> — also answered in <a href="#s1q2">Final 2022/23 · Q2(c)</a>.</p>
+<p><strong>Yes.</strong> On a single core the scheduler can interleave several tasks by time-slicing, so multiple tasks are <em>in progress</em> at once (concurrent) even though only one instruction executes at any instant (not parallel). Concurrency is a structuring property; parallelism requires multiple cores.</p>
+
+<h3>c) When raising M increases saturation throughput</h3>
+<p class="rep">↺ <strong>Repeated</strong> — also answered in <a href="#s1q2">Final 2022/23 · Q2(d)</a>.</p>
+<p>Only when worker threads <strong>block on I/O</strong> (disk, database, network). Extra threads then fill the gaps left by blocked ones, keeping the N cores busy and raising throughput. Once the workload is purely <strong>CPU-bound</strong>, the cores are already saturated at M ≈ N, so adding more threads gives no gain and can even hurt due to context-switching and contention overhead.</p>
+
+<h3>d) 10 user threads on 2 kernel threads, 8 cores</h3>
+<p class="rep">↺ <strong>Repeated</strong> — also answered in <a href="#s1q2">Final 2022/23 · Q2(e)</a>.</p>
+<p>At most <strong>2</strong> run in parallel. Only kernel threads are scheduled onto cores, and there are only 2 of them, so the 8 cores and 10 user threads cannot raise the limit beyond the number of kernel threads.</p>
+<div class="key">Max parallel = min(kernel threads, cores) = min(2, 8) = 2.</div>
+
+<!-- ============================= Q3 ============================= -->
+<div class="qbox">
+<span class="qlabel">Question 3 (5 pts)</span><br>
+Design and analyze a concurrent merge sort. Explain how you would partition the data and manage the threads.
+</div>
+
+<h2 id="s2q3">Question 3 — Concurrent merge sort</h2>
+<p class="rep">↺ <strong>Repeated</strong> — also answered in <a href="#s1q3">Final 2022/23 · Q3</a>.</p>
+<p><strong>Idea.</strong> Merge sort recursively splits the array in half until single elements remain, then merges sorted halves back up. The two halves are <strong>independent</strong>, so they can be sorted at the same time. We exploit this with a <strong>fork-join</strong> pattern: fork one task per half, sort them concurrently, join (wait for both), then merge the results.</p>
+<p><strong>Partitioning &amp; thread management.</strong> Split each subarray at the midpoint. Use a <strong>thread pool</strong> (or fork-join framework) rather than spawning a raw thread per call, to bound the number of live threads and avoid creation overhead. Apply a <strong>sequential cutoff</strong>: below a small size threshold, sort in-place sequentially so tiny tasks do not waste scheduling overhead. The merge step is sequential per node.</p>
+<p><strong>Analysis.</strong> Total <strong>work</strong> is <span class="complexity">O(n log n)</span> (same as sequential). The critical-path <strong>span</strong> is <span class="complexity">O(n)</span>, dominated by the final sequential merge of size n, giving best-case parallelism of O(log n). (A parallel merge would lower the span to O(log<sup>2</sup> n).)</p>
+<p class="pslabel">Suggested pseudocode solution</p>
+<pre>
+function parMergeSort(A, lo, hi):
+    if hi - lo &lt;= CUTOFF:
+        sequentialSort(A, lo, hi)         // small chunk
+        return
+    mid = (lo + hi) / 2
+    left  = fork parMergeSort(A, lo, mid)   // run concurrently
+           parMergeSort(A, mid, hi)
+    join left                              // wait for forked half
+    merge(A, lo, mid, hi)                  // sequential merge
+
+function merge(A, lo, mid, hi):
+    copy A[lo..hi] into temp
+    i = lo; j = mid; k = lo
+    while i &lt; mid and j &lt; hi:
+        A[k++] = (temp[i] &lt;= temp[j]) ? temp[i++] : temp[j++]
+    copy any remainder of temp back into A
+</pre>
+
+<!-- ============================= Q4 ============================= -->
+<div class="qbox">
+<span class="qlabel">Question 4 (5 pts)</span><br>
+A server-clients system is simulated. Each minute exactly ONE of 5 clients generates a task. The client that generates the task follows a geometric ("exponential") law:
+P(client&nbsp;3) = 2·P(client&nbsp;4), P(client&nbsp;4) = 2·P(client&nbsp;5), … — i.e. the weight of client&nbsp;i is proportional to 2<sup>−i</sup> (each earlier client is twice as likely as the next). A distributor then assigns each generated task to one of 4 servers chosen UNIFORMLY at random. Write TWO codes simulating the generation and the distribution.
+</div>
+
+<h2 id="s2q4">Question 4 — Client generation and task distribution</h2>
+<p><strong>Generation.</strong> Give each client i a weight w<sub>i</sub> = 2<sup>(K−i)</sup> so that each earlier client is twice as likely as the next (e.g. for 5 clients use exponents 4,3,2,1,0 → weights 16,8,4,2,1). Normalize by the total weight to get probabilities p<sub>i</sub>, then sample by <strong>inverse-CDF</strong>: draw u ∈ [0,1), walk the cumulative probabilities, and pick the first client whose cumulative sum ≥ u. This reproduces the required geometric "twice as likely" law.</p>
+<p><strong>Distribution.</strong> The distributor picks a server uniformly: server = 1 + floor(uniform() · 4), so each of the 4 servers has probability 1/4 independently of which client produced the task.</p>
+
+<svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Five clients feeding a central distributor that fans out to four servers">
+  <defs>
+    <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="currentColor"/>
+    </marker>
+  </defs>
+  <g font-family="sans-serif" font-size="12" text-anchor="middle">
+    <g>
+      <rect x="20"  y="20" width="80" height="34" rx="6" fill="none" stroke="currentColor"/>
+      <text x="60"  y="42">cli1</text>
+      <rect x="120" y="20" width="80" height="34" rx="6" fill="none" stroke="currentColor"/>
+      <text x="160" y="42">cli2</text>
+      <rect x="220" y="20" width="80" height="34" rx="6" fill="none" stroke="currentColor"/>
+      <text x="260" y="42">cli3</text>
+      <rect x="320" y="20" width="80" height="34" rx="6" fill="none" stroke="currentColor"/>
+      <text x="360" y="42">cli4</text>
+      <rect x="420" y="20" width="80" height="34" rx="6" fill="none" stroke="currentColor"/>
+      <text x="460" y="42">cli5</text>
+    </g>
+    <g stroke="currentColor" fill="none" marker-end="url(#arr)">
+      <path d="M60,54  C60,110 240,110 270,138"/>
+      <path d="M160,54 C160,110 250,110 280,138"/>
+      <path d="M260,54 L275,138"/>
+      <path d="M360,54 C360,110 300,110 290,138"/>
+      <path d="M460,54 C460,110 320,110 300,138"/>
+    </g>
+    <rect x="200" y="140" width="160" height="40" rx="8" fill="none" stroke="currentColor" stroke-width="2"/>
+    <text x="280" y="165" font-weight="bold">distributor</text>
+    <g stroke="currentColor" fill="none" marker-end="url(#arr)">
+      <path d="M280,180 C240,230 100,230 80,256"/>
+      <path d="M280,180 C260,230 220,230 210,256"/>
+      <path d="M280,180 C300,230 340,230 350,256"/>
+      <path d="M280,180 C320,230 460,230 480,256"/>
+    </g>
+    <g>
+      <rect x="30"  y="258" width="100" height="40" rx="6" fill="none" stroke="currentColor"/>
+      <text x="80"  y="282">Server 1</text>
+      <rect x="160" y="258" width="100" height="40" rx="6" fill="none" stroke="currentColor"/>
+      <text x="210" y="282">Server 2</text>
+      <rect x="300" y="258" width="100" height="40" rx="6" fill="none" stroke="currentColor"/>
+      <text x="350" y="282">Server 3</text>
+      <rect x="430" y="258" width="100" height="40" rx="6" fill="none" stroke="currentColor"/>
+      <text x="480" y="282">Server 4</text>
+    </g>
+  </g>
+</svg>
+
+<p class="pslabel">Suggested pseudocode solution</p>
+<pre>
+// ---- generation: pick which of N clients produces the task ----
+function generateTask(N):                 // N = 5
+    weights = []
+    for i in 1..N:
+        weights[i] = 2 ^ (N - i)          // 16,8,4,2,1  (cli1 most likely)
+    total = sum(weights)
+    u = uniform() * total                 // u in [0, total)
+    cum = 0
+    for i in 1..N:
+        cum = cum + weights[i]
+        if u &lt; cum:
+            return client i               // first client whose cumulative >= u
+</pre>
+<pre>
+// ---- distribution: assign the task to one of 4 servers uniformly ----
+function distributeTask(task, S):         // S = 4
+    server = 1 + floor(uniform() * S)     // each server prob = 1/S
+    sendTo(server, task)
+    return server
+</pre>
+
+<!-- ============================= Q5 ============================= -->
+<div class="qbox">
+<span class="qlabel">Question 5 (5 pts)</span><br>
+<ol type="a">
+<li>Give an O(log n)-time SEQUENTIAL algorithm to find the median of all 2n elements of two sorted arrays A and B, each of size n. Provide pseudocode and prove the running time.</li>
+<li>For the recurrence f(n) = 4 f(n/2) + 1: how many subproblems are there and what is their size?</li>
+</ol>
+</div>
+
+<h2 id="s2q5">Question 5 — Median of two sorted arrays; recurrence shape</h2>
+
+<h3>a) O(log n) median of two sorted arrays</h3>
+<p><strong>Idea.</strong> Compare the medians of the two arrays. If median(A) &lt; median(B), the overall median of all 2n elements cannot lie in A's <em>lower</em> half nor in B's <em>upper</em> half, so those halves are discarded and we recurse on the remaining halves (keeping the discarded counts equal so the median position is preserved). Symmetrically if median(A) &gt; median(B). Each step halves the candidate size, so we converge quickly.</p>
+<p><strong>Proof of running time.</strong> Each recursive call discards half of each remaining subarray and does O(1) comparison work, giving T(n) = T(n/2) + O(1). By the Master Theorem (or by unrolling: O(1) work for log n levels), <span class="complexity">T(n) = O(log n)</span>.</p>
+<p class="pslabel">Suggested pseudocode solution</p>
+<pre>
+function median2(A, B):                    // both sorted, equal length
+    while length(A) &gt; 2:
+        ma = median(A);  mb = median(B)
+        k  = floor(length(A) / 2)          // discard k from each side
+        if ma == mb: return ma
+        if ma &lt; mb:
+            A = A[k .. end]                 // drop A's lower half
+            B = B[0 .. length(B)-k]         // drop B's upper half
+        else:
+            A = A[0 .. length(A)-k]         // drop A's upper half
+            B = B[k .. end]                 // drop B's lower half
+    // base case: 2 elements each
+    return ( max(A[0], B[0]) + min(A[1], B[1]) ) / 2
+</pre>
+
+<h3>b) f(n) = 4 f(n/2) + 1</h3>
+<p class="rep">↺ <strong>Repeated</strong> — also answered in <a href="#s1q6">Final 2022/23 · Q6</a>.</p>
+<p>There are <strong>4 subproblems</strong>, each of <strong>size n/2</strong>. With a = 4, b = 2, f = O(1): n<sup>log<sub>2</sub>4</sup> = n<sup>2</sup> dominates, so by the Master Theorem the complexity is <span class="complexity">Θ(n<sup>2</sup>)</span>.</p>
+
+<!-- ============================= Q6 ============================= -->
+<div class="qbox">
+<span class="qlabel">Question 6 (5 pts)</span><br>
+Design a concurrent algorithm to generate ALL permutations of the set [1..n] using multiple threads. Discuss Partitioning, Concurrency, Synchronization and Performance.
+</div>
+
+<h2 id="s2q6">Question 6 — Concurrent permutation generation</h2>
+<p><strong>Idea.</strong> Fix the first element of the permutation. There are n possible first elements, and each choice gives an independent group of (n−1)! permutations of the remaining items. Hand each first-element (or a range of them) to a different thread.</p>
+<p><strong>Partitioning.</strong> Split the n first-element choices among the p threads (e.g. thread t handles first elements t, t+p, t+2p, …). Each group is fully independent.</p>
+<p><strong>Concurrency.</strong> Each thread, on its own copy of the remaining set, recursively generates the (n−1)! permutations for its fixed prefixes. Because groups never share the same first element, no two threads ever produce the same permutation and there are no read/write conflicts on shared data.</p>
+<p><strong>Synchronization.</strong> Each thread writes into its <em>own</em> output buffer, so almost no locking is needed. Results are combined at the end by concatenation, or streamed into a single <strong>concurrent queue</strong> if a unified output is required.</p>
+<p><strong>Performance.</strong> Total work is <span class="complexity">O(n · n!)</span> (n! permutations, O(n) to emit each). With p ≤ n balanced threads, speedup ≈ p and efficiency = speedup/p is near 1, because the n branches are equal-sized so load is well balanced.</p>
+<p class="pslabel">Suggested pseudocode solution</p>
+<pre>
+function permuteAll(n, p):
+    parallel for t in 0 .. p-1:
+        local out = []                     // private buffer per thread
+        for first in (t+1) .. n step p:    // disjoint set of first elements
+            rest = [1..n] without first
+            permuteRec([first], rest, out)
+        emit out                           // concat, or push to concurrent queue
+
+function permuteRec(prefix, remaining, out):
+    if remaining is empty:
+        out.append(prefix)
+        return
+    for each x in remaining:
+        permuteRec(prefix + [x], remaining without x, out)
+</pre>
+
+<!-- ============================= Q7 ============================= -->
+<div class="qbox">
+<span class="qlabel">Question 7 (5 pts)</span><br>
+<ol type="a">
+<li>You have an input file of four billion integers and only 1 GB of RAM. Generate an integer that is NOT contained in the file. Analyze the complexity.</li>
+<li>How can Dijkstra's shortest-path algorithm be parallelized?</li>
+</ol>
+</div>
+
+<h2 id="s2q7">Question 7 — Missing integer with limited RAM; parallel Dijkstra</h2>
+
+<h3>a) Find a missing integer</h3>
+<p><strong>Idea.</strong> 32-bit integers span 0 … 2<sup>32</sup>−1 (≈ 4.29×10<sup>9</sup> distinct values). Allocate a <strong>bit vector</strong> of 2<sup>32</sup> bits = 2<sup>29</sup> bytes = <strong>512 MB</strong>, which fits in 1 GB. Scan the file once, setting the bit for each value seen. Then scan the bitmap for the first <strong>0-bit</strong>; its index is an integer not present in the file.</p>
+<div class="key">Bitmap of 2<sup>32</sup> bits (512 MB) → set bits in one pass, then report first clear bit. Time <span class="complexity">O(n)</span>, memory 512 MB.</div>
+<p><strong>If memory were tighter:</strong> do a two-pass <strong>bucket/counting</strong> approach. Split the integer range into buckets; in pass 1 count how many file values fall into each bucket; a bucket whose count is below its capacity must contain a missing value. In pass 2, recurse into just that bucket (now using a small bitmap). This trades extra passes for far less memory.</p>
+
+<h3>b) Parallelizing Dijkstra</h3>
+<p>Dijkstra is <strong>inherently sequential</strong> because each step selects the single global-minimum-distance unsettled vertex, creating a dependency chain. Parallelism is therefore limited to:</p>
+<ul>
+<li><strong>Parallel edge relaxation</strong> — once the current vertex is settled, relax all of its outgoing edges (or the whole frontier) concurrently.</li>
+<li><strong>Parallel reduction for the minimum</strong> — find the next min-distance vertex with a parallel reduction over the distance array.</li>
+<li><strong>Approximate / bucketed priority queues</strong> — algorithms like <strong>Δ-stepping</strong> process a whole bucket of "light"-edge vertices in parallel, relaxing the strict global-min ordering to expose much more parallelism.</li>
+</ul>
+<p class="pslabel">Suggested pseudocode solution</p>
+<pre>
+parallelDijkstra(G, s):
+    dist[] = INF; dist[s] = 0
+    while unsettled vertices remain:
+        u = parallelReduceMin(dist over unsettled)   // parallel min
+        mark u settled
+        parallel for each edge (u, v, w):            // relax in parallel
+            atomic: dist[v] = min(dist[v], dist[u] + w)
+    return dist
+</pre>
+
+<!-- ============================= Q8 ============================= -->
+<div class="qbox">
+<span class="qlabel">Question 8 (5 pts)</span><br>
+Parallel matrix multiplication of A (n×m) × B (m×p) = C (n×p).
+<ol type="a">
+<li>What steps are required to parallelize it?</li>
+<li>How would you distribute the work in a SHARED-memory versus a DISTRIBUTED-memory environment?</li>
+</ol>
+</div>
+
+<h2 id="s2q8">Question 8 — Parallel matrix multiplication</h2>
+<p><strong>Idea.</strong> Every output cell C[i][j] = Σ<sub>k</sub> A[i][k]·B[k][j] is computed independently of all others. So we assign disjoint sets of output cells (rows or blocks) to different processors and let each compute its own dot products — there are no write conflicts.</p>
+
+<h3>a) Steps to parallelize</h3>
+<ul>
+<li>Partition the output C among the p workers (by rows, columns or 2-D blocks).</li>
+<li>Each worker reads the rows of A and columns of B it needs.</li>
+<li>Each worker computes the dot products for its assigned block of C.</li>
+<li>Each worker writes its <strong>disjoint</strong> part of C — no synchronization on writes is required.</li>
+</ul>
+
+<h3>b) Shared-memory vs distributed-memory</h3>
+<p><strong>Shared-memory (e.g. OpenMP).</strong> All threads see A, B and C in one address space, so it is enough to parallelize the outer loop(s) over rows/blocks of C. No explicit data movement is needed, but you must watch <strong>cache locality and false sharing</strong> (block the loops, keep each thread's output region separate).</p>
+<p><strong>Distributed-memory (e.g. MPI).</strong> The matrices are split across nodes, so a node does <em>not</em> automatically hold the rows/columns it needs. You must explicitly <strong>send</strong> the required rows of A and columns of B (or use block algorithms like <strong>Cannon's</strong> or <strong>SUMMA</strong>) and then <strong>gather</strong> the partial results. Here <strong>communication cost</strong> typically becomes the bottleneck, so the goal is to minimize and overlap messages.</p>
+<p class="pslabel">Suggested pseudocode solution (shared-memory)</p>
+<pre>
+parallelMatMul(A, B, C, n, m, p):
+    parallel for i in 0 .. n-1:            // rows of C split across threads
+        for j in 0 .. p-1:
+            sum = 0
+            for k in 0 .. m-1:
+                sum += A[i][k] * B[k][j]
+            C[i][j] = sum                  // disjoint write, no lock needed
+</pre>
+
+<!-- ============================= Q9 ============================= -->
+<div class="qbox">
+<span class="qlabel">Question 9 (5 pts)</span><br>
+<ol type="a">
+<li>Give the recurrence and complexity of Foo(n) { if n = 0 return 0; if n = 1 return 1; return Foo(n−1) + Foo(n−1) }.</li>
+<li>Pipeline performance is limited by: A) the fastest stage&nbsp; B) the number of processors&nbsp; C) memory latency&nbsp; D) the slowest stage.</li>
+<li>A deadlock occurs when: A) all processes finish together&nbsp; B) one process runs faster&nbsp; C) processes wait indefinitely for each other to release resources&nbsp; D) there is no shared resource.</li>
+<li>Define the prefix-sums problem, outline parallel algorithms with their complexity, give examples of uses, and explain the time-versus-operations trade-off.</li>
+</ol>
+</div>
+
+<h2 id="s2q9">Question 9 — Recurrence, pipeline/deadlock MCQs, prefix sums</h2>
+
+<h3>a) Recurrence and complexity of Foo</h3>
+<p>The body makes <strong>two</strong> recursive calls of size n−1, so T(n) = 2·T(n−1) + c with T(0) = T(1) = Θ(1). Unrolling:</p>
+<p>T(n) = 2T(n−1) + c = 4T(n−2) + 2c + c = … = 2<sup>n−1</sup>·Θ(1) + (2<sup>n−1</sup>−1)c. The recursion tree has 2<sup>n</sup> leaves, so</p>
+<div class="key">T(n) = 2 T(n−1) + Θ(1) ⇒ <span class="complexity">Θ(2<sup>n</sup>)</span> (exponential — both branches recompute the same value).</div>
+
+<h3>b) Pipeline performance limit</h3>
+<p><strong>D) the slowest stage</strong> — throughput is set by the bottleneck stage, since every item must pass through it.</p>
+
+<h3>c) Deadlock</h3>
+<p><strong>C) processes wait indefinitely for each other to release resources.</strong></p>
+
+<h3>d) Prefix-sums (scan)</h3>
+<p><strong>Definition.</strong> Given a sequence a<sub>0</sub>, a<sub>1</sub>, …, a<sub>n−1</sub>, the (inclusive) prefix-sums problem computes S[i] = a<sub>0</sub> + a<sub>1</sub> + … + a<sub>i</sub> for every i — each output is the running total up to that position.</p>
+<p><strong>Algorithms and complexity.</strong></p>
+<ul>
+<li>Sequential: one left-to-right pass, <span class="complexity">O(n)</span> work.</li>
+<li><strong>Hillis-Steele</strong> (naïve parallel scan): <span class="complexity">O(log n)</span> time but <span class="complexity">O(n log n)</span> total work.</li>
+<li><strong>Blelloch</strong> (work-efficient, up-sweep + down-sweep over a tree): <span class="complexity">O(log n)</span> time and only <span class="complexity">O(n)</span> work.</li>
+</ul>
+<p><strong>Uses.</strong> stream compaction (filtering with parallel index assignment), radix sort, computing cumulative counts/histograms, line-of-sight and other running-aggregate problems.</p>
+<p><strong>Time-vs-operations trade-off.</strong> Reducing the parallel <em>depth</em> (time) toward O(1) generally forces more total <em>operations</em> (work) — Hillis-Steele is shallow but does O(n log n) work, while Blelloch keeps O(n) work at the same depth. You balance parallel time (depth) against total work to fit the available processors.</p>
+
+<!-- ============================= Q10 ============================= -->
+<div class="qbox">
+<span class="qlabel">Question 10 (5 pts)</span><br>
+<ol type="a">
+<li>A parallel algorithm runs in 5 s on 4 processors and 20 s on 1 processor. Compute the speedup and efficiency and state the implications.</li>
+<li>With n = 20, k = 10 and 4 CPU cores, what strategy maximizes core utilization while minimizing overhead, and how would the strategy differ on a GPU?</li>
+</ol>
+</div>
+
+<h2 id="s2q10">Question 10 — Speedup/efficiency; CPU vs GPU strategy</h2>
+
+<h3>a) Speedup and efficiency</h3>
+<p>Speedup S = T<sub>1</sub> / T<sub>p</sub> = 20 / 5 = 4. Efficiency E = S / p = 4 / 4 = 1 = 100%.</p>
+<div class="key">S = 4, E = 100% — ideal/linear scaling: every core is fully utilized.</div>
+<p><strong>Implications.</strong> This is perfect linear speedup, which is rare in practice. By <strong>Amdahl's law</strong> any sequential fraction plus communication/synchronization overhead normally caps efficiency below 1; achieving E = 1 implies a near-fully-parallelizable workload with negligible overhead.</p>
+
+<h3>b) CPU (n=20, k=10, 4 cores) vs GPU strategy</h3>
+<p><strong>CPU strategy.</strong> Divide the work into about <strong>4 balanced coarse-grained chunks</strong> (one per core) and run them on a <strong>thread pool with work-stealing</strong> to keep all cores busy if some chunks finish early. Keep tasks coarse enough to <strong>amortize thread-creation and synchronization overhead</strong>, and avoid <strong>oversubscription</strong> (don't spawn far more threads than cores).</p>
+<p><strong>GPU strategy.</strong> The opposite granularity: launch <strong>thousands of lightweight SIMT threads</strong> for fine-grained data parallelism. Optimize for <strong>coalesced memory access</strong>, <strong>minimal branch divergence</strong> within a warp, and <strong>minimal host↔device transfers</strong>. A GPU favors massive fine-grained parallelism, whereas the 4-core CPU favors a few heavy, coarse tasks.</p>
+
+</section>
+
+<div class="pagebreak"></div>
+
+<section id="sample">
+<h1>Section 3 — Sample Problems &amp; Suggested Finals</h1>
+
+<!-- ============ PART 1 — QUESTION 1 ============ -->
+<div class="qbox"><span class="qlabel">Sample · Q1</span><br>
+You are given two sorted arrays A and B, each of size n.
+(a) Write an O(n) sequential algorithm to merge them into a single sorted array C of size 2n.
+(b) Find the median of all 2n elements in O(log n) time.
+(c) Merge the two arrays using 2 processors so that T<sub>2</sub>(n) = O(T<sub>1</sub>(n)/2) + log n.
+(d) Generalize the parallel merge to P processors. What is the maximum P for which the algorithm stays work-optimal?
+</div>
+
+<h2 id="sample-q1">Q1 — Merging two sorted arrays</h2>
+
+<h3>(a) O(n) sequential merge</h3>
+<p>Keep two pointers, one at the front of A and one at the front of B. Repeatedly compare the two front elements, copy the smaller one into C, and advance that pointer. When one array is exhausted, copy the remaining tail of the other. Every comparison consumes exactly one element, so after 2n copies C is fully sorted. Each element is touched once, giving linear time and no comparisons wasted.</p>
+<div class="key">Time <span class="complexity">O(n)</span>, extra space <span class="complexity">O(n)</span> for C.</div>
+<p class="pslabel">Suggested pseudocode solution</p>
+<pre>MERGE(A, B, n):
+    i = 0; j = 0; k = 0
+    while i &lt; n and j &lt; n:
+        if A[i] &lt;= B[j]:
+            C[k++] = A[i++]
+        else:
+            C[k++] = B[j++]
+    while i &lt; n: C[k++] = A[i++]
+    while j &lt; n: C[k++] = B[j++]
+    return C</pre>
+
+<h3>(b) Median of all 2n elements in O(log n)</h3>
+<p class="rep">↺ <strong>Repeated</strong> — full answer in <a href="#s2q5">Final 2024/25 · Q5(a)</a>.</p>
+<p>Compare the median of A with the median of B. The half that cannot contain the overall median is discarded from each array, halving the search every step. This yields T(n) = T(n/2) + O(1) = <span class="complexity">O(log n)</span>.</p>
+
+<h3>(c) Two-processor parallel merge</h3>
+<p class="rep">↺ <strong>Repeated</strong> — full answer in <a href="#s1q10">Final 2022/23 · Q10</a>.</p>
+<p>Use a median/rank split so the combined output is divided in two; each processor merges at most n elements into its own disjoint region of C with no conflicts. Cost is the rank computation plus a half-size merge: <span class="complexity">O(n/2 + log n)</span>.</p>
+
+<h3>(d) Generalization to P processors and work-optimality</h3>
+<p>Choose P&minus;1 splitter values by repeated median/rank queries so that the merged output is cut into P contiguous blocks of about 2n/P elements each. Processor i locates the matching ranges in A and B (via binary search, O(log n)) and merges its slice into a disjoint region of C, so all P processors run in parallel with no overlap. The per-processor merge dominates: T<sub>P</sub>(n) = O(n/P + log n). Total work is O(n) merge work plus O(P log n) splitter work.</p>
+<div class="key">T<sub>P</sub>(n) = <span class="complexity">O(n/P + log n)</span>; work = O(n + P log n), which stays O(n) (work-optimal) as long as <strong>P = O(n / log n)</strong>.</div>
+
+<!-- ============ PART 2 — QUESTION 2 ============ -->
+<div class="qbox"><span class="qlabel">Sample · Q2</span><br>
+Define the prefix-sums (scan) problem. Describe parallel algorithms for it with their complexity, give example uses, list variations, and discuss the time-vs-work trade-off.
+</div>
+
+<h2 id="sample-q2">Q2 — Prefix sums (scan)</h2>
+<p class="rep">↺ <strong>Repeated</strong> — full answer in <a href="#s2q9">Final 2024/25 · Q9(d)</a>.</p>
+<p><strong>Definition.</strong> Given an array x<sub>0</sub>, …, x<sub>n&minus;1</sub> and an associative operator (e.g. +), the scan produces all prefixes: the inclusive scan outputs s<sub>i</sub> = x<sub>0</sub> + … + x<sub>i</sub>, and the exclusive scan outputs the sum of all elements strictly before i.</p>
+<p><strong>Parallel algorithms.</strong> <em>Blelloch (work-efficient)</em> does an up-sweep (reduction tree) then a down-sweep, giving depth O(log n) and work O(n). <em>Hillis–Steele</em> adds elements at stride 1, 2, 4, …, also depth O(log n) but work O(n log n).</p>
+<ul>
+<li><strong>Uses:</strong> compaction/stream-compaction, radix sort, line-of-sight, histogram offsets, parallel allocation of buffer indices.</li>
+<li><strong>Variations:</strong> inclusive vs exclusive scan; segmented scan (independent scans within flagged segments); scans over any associative operator (max, min, ×).</li>
+</ul>
+<p><strong>Trade-off.</strong> Hillis–Steele has shorter constant factors and simpler indexing but does Θ(n log n) work (more total operations); Blelloch keeps work at Θ(n) (asymptotically optimal) at the cost of two passes and trickier indexing. Both have depth Θ(log n).</p>
+<div class="key">Blelloch: depth <span class="complexity">O(log n)</span>, work <span class="complexity">O(n)</span>. Hillis–Steele: depth <span class="complexity">O(log n)</span>, work <span class="complexity">O(n log n)</span>.</div>
+
+<!-- ============ PART 3 — QUESTION 3 (rotated array) ============ -->
+<div class="qbox"><span class="qlabel">Sample · Q3 (rotated array)</span><br>
+Given a sorted array that has been rotated at an unknown pivot, find a target element in O(log n) time.
+</div>
+
+<h2 id="sample-q3-rotated">Q3 — Search in a rotated sorted array</h2>
+<p>Use a modified binary search. At every step compute mid; one of the two halves [lo..mid] or [mid..hi] is always fully sorted (its endpoints are in order). Check whether the target falls inside that sorted half's value range: if so, recurse there; otherwise recurse into the other half. The search space halves each iteration, so the cost is logarithmic and only O(1) extra space is used.</p>
+
+<p><strong>Worked example.</strong> Find 5 in [15, 16, 19, 20, 25, 1, 3, 4, 5, 7, 10, 14].</p>
+<table>
+<tr><th>Iter</th><th>lo</th><th>hi</th><th>mid</th><th>arr[mid]</th><th>Reasoning</th><th>Action</th></tr>
+<tr><td>1</td><td>0</td><td>11</td><td>5</td><td>1</td><td>Right half [1..14] is sorted and 5 ∈ [1, 14]</td><td>lo = 6</td></tr>
+<tr><td>2</td><td>6</td><td>11</td><td>8</td><td>5</td><td>arr[8] == target</td><td>return 8</td></tr>
+</table>
+<div class="key">Returns index 8. Time <span class="complexity">O(log n)</span>, space <span class="complexity">O(1)</span>.</div>
+
+<p class="pslabel">Suggested pseudocode solution</p>
+<pre>SEARCH_ROTATED(arr, target):
+    lo = 0; hi = n - 1
+    while lo &lt;= hi:
+        mid = (lo + hi) / 2
+        if arr[mid] == target: return mid
+        if arr[lo] &lt;= arr[mid]:            # left half sorted
+            if arr[lo] &lt;= target &lt; arr[mid]: hi = mid - 1
+            else: lo = mid + 1
+        else:                              # right half sorted
+            if arr[mid] &lt; target &lt;= arr[hi]: lo = mid + 1
+            else: hi = mid - 1
+    return -1</pre>
+
+<!-- ============ PART 4 — QUESTION 3 items a–r ============ -->
+<h2 id="sample-q3-items">Q3 — Items (a)–(r)</h2>
+
+<h3 id="sample-3a">(a) 15-minute egg with two uneven 60-minute ropes</h3>
+<p>Each rope burns in 60 minutes but unevenly, so you cannot measure length. Light rope 1 at <em>both</em> ends and rope 2 at <em>one</em> end at the same instant. Because rope 1 burns from both ends it finishes in 30 minutes. At that exact moment, light rope 2's other end too: its remaining 30-minutes-worth of rope now burns from both ends and finishes in 15 more minutes. Time the egg from the 30-minute mark.</p>
+<div class="key">Rope-2 burnout marks exactly <strong>15 minutes</strong>.</div>
+
+<h3 id="sample-3b">(b) Expansion of T(n) = 4T(n/3) + n, T(1) = 1</h3>
+<p>Expanding: T(n) = n + 4(n/3) + 16(n/9) + … = n·Σ (4/3)<sup>k</sup>. The ratio 4/3 &gt; 1 so the geometric series is dominated by its last term at depth log<sub>3</sub>n, i.e. the leaves. Number of leaves = 4<sup>log<sub>3</sub>n</sup> = n<sup>log<sub>3</sub>4</sup>, which beats the O(n) work split across the upper levels. This is Master-theorem case 1 (leaves dominate).</p>
+<div class="key"><span class="complexity">Θ(n<sup>log<sub>3</sub>4</sup>) ≈ Θ(n<sup>1.262</sup>)</span></div>
+
+<h3 id="sample-3c">(c) Foo recurrence</h3>
+<p class="rep">↺ <strong>Repeated</strong> — full answer in <a href="#s2q9">Final 2024/25 · Q9(a)</a>.</p>
+<p>T(n) = 2T(n&minus;1) + c expands as a geometric series with ratio 2 over n levels, so <span class="complexity">Θ(2<sup>n</sup>)</span>.</p>
+
+<h3 id="sample-3d">(d) Merge sort on 107, 105, 12, 28, 49, 50, 68, 321</h3>
+<p>Split recursively into singletons, then merge pairwise back up.</p>
+<table>
+<tr><th>Stage</th><th>Result</th></tr>
+<tr><td>Split halves</td><td>[107,105,12,28] | [49,50,68,321]</td></tr>
+<tr><td>Merge pairs</td><td>[105,107] [12,28] [49,50] [68,321]</td></tr>
+<tr><td>Merge fours</td><td>[12,28,105,107] [49,50,68,321]</td></tr>
+<tr><td>Final merge</td><td><strong>12, 28, 49, 50, 68, 105, 107, 321</strong></td></tr>
+</table>
+<div class="key">Sorted output above; time <span class="complexity">Θ(n log n)</span>.</div>
+
+<h3 id="sample-3e">(e) Sorting a million items: merge sort vs bubble sort</h3>
+<p>For n = 10<sup>6</sup>: merge sort costs about n log<sub>2</sub>n ≈ 10<sup>6</sup> · 20 = 2 × 10<sup>7</sup> operations. Bubble sort costs n<sup>2</sup> = (10<sup>6</sup>)<sup>2</sup> = 10<sup>12</sup> operations. The ratio is 10<sup>12</sup> / (2 × 10<sup>7</sup>) ≈ 5 × 10<sup>4</sup>.</p>
+<div class="key">Merge sort is roughly <strong>50,000× faster</strong> at one million items.</div>
+
+<h3 id="sample-3f">(f) Missing integer, 4 billion ints, 1 GB</h3>
+<p class="rep">↺ <strong>Repeated</strong> — full answer in <a href="#s2q7">Final 2024/25 · Q7(a)</a>.</p>
+<p>Allocate a 512 MB bitmap covering all 2<sup>32</sup> values, scan the file once setting one bit per value seen, then find the first 0-bit. <span class="complexity">O(n)</span> time, fits in 1 GB.</p>
+
+<h3 id="sample-3g">(g) Ω(n log n) lower bound for "do any two segments intersect?"</h3>
+<p>Reduce from ELEMENT UNIQUENESS, which is Ω(n log n) in the algebraic decision-tree model. Map each input number x<sub>i</sub> to a tiny point/vertical segment on the x-axis located at x<sub>i</sub>. Two of these segments coincide (intersect) exactly when two input numbers are equal, so a segment-intersection test would decide whether all inputs are distinct. Hence intersection detection inherits the same lower bound.</p>
+<div class="key">Lower bound <span class="complexity">Ω(n log n)</span> by reduction from element uniqueness.</div>
+
+<h3 id="sample-3h">(h) Quicksort on 70, 15, 3, 9, 14, 16, 8, 21 + space comparison</h3>
+<p>Pick the last element as pivot (21), partition smaller-left / larger-right, then recurse on each side. Repeated partitioning yields the sorted order.</p>
+<table>
+<tr><th>Step</th><th>Pivot</th><th>Partition</th></tr>
+<tr><td>1</td><td>21</td><td>[15,3,9,14,16,8] | 21 | [70]</td></tr>
+<tr><td>2</td><td>8</td><td>[3] | 8 | [15,9,14,16]</td></tr>
+<tr><td>3</td><td>16</td><td>[15,9,14] | 16 | []</td></tr>
+<tr><td>4</td><td>14</td><td>[9] | 14 | [15]</td></tr>
+<tr><td>Final</td><td>—</td><td><strong>3, 8, 9, 14, 15, 16, 21, 70</strong></td></tr>
+</table>
+<p><strong>Space.</strong> Quicksort partitions in place, so it only consumes the recursion stack — O(log n) on balanced splits. Merge sort must interleave two sorted halves into a separate buffer, requiring an O(n) temporary array.</p>
+<div class="key">Quicksort extra space <span class="complexity">O(log n)</span>; merge sort <span class="complexity">O(n)</span>.</div>
+
+<h3 id="sample-3i">(i) f(n) = 4f(n/2) + 1</h3>
+<p class="rep">↺ <strong>Repeated</strong> — full answer in <a href="#s1q6">Final 2022/23 · Q6</a>.</p>
+<p>Four subproblems of size n/2 with constant combine work give <span class="complexity">Θ(n<sup>2</sup>)</span> (leaves dominate).</p>
+
+<h3 id="sample-3j">(j) Recursive integer square root in O(log n)</h3>
+<p>Binary-search the root implemented recursively, with no loops or built-ins. Maintain a range [lo, hi] known to contain the answer; the helper compares mid·mid against n and recurses into the half that must hold the floor of the square root. Each call halves the range, so it terminates in O(log n) recursive steps.</p>
+<div class="key">Time <span class="complexity">O(log n)</span>.</div>
+<p class="pslabel">Suggested pseudocode solution</p>
+<pre>ISQRT(n): return HELPER(n, 0, n)
+
+HELPER(n, lo, hi):
+    if lo &gt; hi: return hi          # floor(sqrt(n))
+    mid = (lo + hi) / 2
+    sq = mid * mid
+    if sq == n: return mid
+    if sq &lt; n:  return HELPER(n, mid + 1, hi)
+    else:       return HELPER(n, lo, mid - 1)</pre>
+
+<h3 id="sample-3k">(k) Server-clients simulation</h3>
+<p class="rep">↺ <strong>Repeated</strong> — full answer in <a href="#s2q4">Final 2024/25 · Q4</a>.</p>
+<p>Pick the client by weighted (2<sup>&minus;i</sup>) inverse-CDF sampling and the server uniformly from 1..4.</p>
+
+<h3 id="sample-3l">(l) Parallel merge sort + complexity</h3>
+<p class="rep">↺ <strong>Repeated</strong> — full answer in <a href="#s1q3">Final 2022/23 · Q3</a>.</p>
+<p>Fork-join recursion sorts the two halves in parallel; with a parallel merge the work is O(n log n) and the span is O(log<sup>2</sup>n).</p>
+
+<h3 id="sample-3m">(m) Concurrent maximum of an array</h3>
+<p>Split the array into p chunks. Each thread scans its chunk to find a local maximum in O(n/p), then the p local maxima are combined by a tree reduction in O(log p). Total parallel time is O(n/p + log p), so the speedup is close to p when n ≫ p.</p>
+<div class="key">T<sub>p</sub> = <span class="complexity">O(n/p + log p)</span>, speedup ≈ p.</div>
+<p class="pslabel">Suggested pseudocode solution</p>
+<pre>PARALLEL_MAX(A, n, p):
+    parallel for t in 0..p-1:
+        local[t] = max of A[t*n/p .. (t+1)*n/p - 1]
+    # tree reduction over the p local maxima
+    for d = 1; d &lt; p; d *= 2:
+        parallel for t = 0; t &lt; p; t += 2*d:
+            if t + d &lt; p:
+                local[t] = max(local[t], local[t+d])
+    return local[0]</pre>
+
+<h3 id="sample-3n">(n) Concurrent vs sequential quicksort for large data</h3>
+<p>Sequential quicksort runs on one core with average O(n log n) / worst O(n<sup>2</sup>), uses only O(log n) stack, has negligible overhead, and is best on small-to-medium inputs. Concurrent quicksort sorts the two partitions on separate threads/tasks, performs the same O(n log n) total work but reduces the critical path to about O(log n) depth, consumes more memory for task stacks, and delivers roughly 2–8× wall-clock speedup on 4–8 cores for large data. Its task/thread overhead can dominate on small arrays, so a sequential cutoff (switch to plain quicksort below a threshold) is used.</p>
+
+<h3 id="sample-3o">(o) Deadlock conditions + example + fix</h3>
+<p class="rep">↺ <strong>Repeated</strong> — full answer in <a href="#s2q1">Final 2024/25 · Q1(f)</a>.</p>
+<p>The four Coffman conditions are mutual exclusion, hold-and-wait, no preemption, and circular wait. Example: thread 1 locks A then waits for B while thread 2 locks B then waits for A. Fix with a global lock ordering so both acquire A before B.</p>
+
+<h3 id="sample-3p">(p) Detect and recover from deadlock</h3>
+<p>Build a wait-for / resource-allocation graph where processes and resources are nodes, with allocation edges (resource → process) and request edges (process → resource). A cycle in this graph indicates deadlock. Recover by terminating or rolling back a victim process inside the cycle, or by preempting and reassigning its resources, then re-running the detection.</p>
+<p class="pslabel">Suggested pseudocode solution</p>
+<pre>DETECT_DEADLOCK(graph):
+    for each node v:
+        if DFS_HAS_CYCLE(v, visited, onStack):
+            return CYCLE_FOUND        # deadlock
+    return NO_DEADLOCK
+
+# recovery: choose victim in cycle, abort/rollback, free its resources</pre>
+
+<h3 id="sample-3q">(q) Livelock vs deadlock</h3>
+<p>In deadlock the processes are blocked and idle, stuck in a circular wait, consuming no CPU. In livelock the processes keep changing state and stay CPU-active but make no forward progress — for example two people repeatedly stepping side-to-side in a hallway, or threads that retry-and-back-off in perfect lockstep. The fix is to break the symmetry with randomized back-off or priorities so that one party proceeds.</p>
+
+<h3 id="sample-3r">(r) Parallelizing Dijkstra</h3>
+<p class="rep">↺ <strong>Repeated</strong> — full answer in <a href="#s2q7">Final 2024/25 · Q7(b)</a>.</p>
+<p>Relax the frontier's edges in parallel, use a parallel min-reduction to pick the next vertex, and adopt Δ-stepping or parallel priority queues to expose more concurrency.</p>
+
+<!-- ============ PART 5 — SUGGESTED FINAL EXAM PROBLEMS ============ -->
+<h2 id="sample-suggested">Suggested Final Exam Problems</h2>
+
+<h3 id="sug-1">1. Concurrency vs parallelism</h3>
+<p>(see <a href="#s1q1">Final 2022/23 · Q1(f)</a>) Concurrency is structuring a program as independently progressing tasks (interleaved on one or more cores); parallelism is actually executing multiple tasks simultaneously on multiple cores.</p>
+
+<h3 id="sug-2">2. Advantages and challenges of parallel computing</h3>
+<p>Advantages: higher throughput, reduced wall-clock time, and the ability to solve larger problems by using many cores. Challenges: synchronization and race conditions, communication/overhead costs, load imbalance, and the limited speedup imposed by the sequential fraction (Amdahl).</p>
+
+<h3 id="sug-3">3. Deadlock + four conditions</h3>
+<p>(see <a href="#s2q1">Final 2024/25 · Q1(f)</a>) Deadlock is a circular wait where each process holds a resource the next needs. The four necessary Coffman conditions are mutual exclusion, hold-and-wait, no preemption, and circular wait.</p>
+
+<h3 id="sug-4">4. Readers–Writers problem + solutions</h3>
+<p>Many readers may share data but a writer needs exclusive access. Solutions include reader-priority (writers may starve), writer-priority (readers may starve), and a fair queued version; all are built with semaphores/mutexes and a reader counter guarded by a lock.</p>
+
+<h3 id="sug-5">5. Shared-memory vs distributed-memory</h3>
+<p>In shared-memory systems all processors read and write a common address space, so communication is implicit through memory but requires locks and cache coherence. In distributed-memory systems each node has private memory and processors cooperate by passing explicit messages, which scales further but adds communication latency.</p>
+
+<h3 id="sug-6">6. Thread creation and synchronization</h3>
+<p>Threads are spawned (e.g. via a thread library or pool) to run functions concurrently within a shared address space. They are synchronized with locks/mutexes (mutual exclusion), semaphores (counting access), barriers (wait for all to reach a point), and condition variables (wait/signal on a predicate).</p>
+
+<h3 id="sug-7">7. Thread starvation</h3>
+<p>Starvation is when a thread is perpetually denied a resource or CPU time because others keep being favored (e.g. unfair scheduling or writer-priority locks). It occurs when scheduling/lock policies lack fairness, so a low-priority or unlucky thread never makes progress.</p>
+
+<h3 id="sug-8">8. Speedup</h3>
+<p>Speedup is S = T<sub>1</sub> / T<sub>p</sub>, the ratio of single-processor runtime to p-processor runtime. Ideal (linear) speedup is S = p, rarely reached due to overhead and the sequential fraction.</p>
+
+<h3 id="sug-9">9. Amdahl's Law</h3>
+<p>With sequential fraction s and parallelizable fraction (1&minus;s), the maximum speedup is S<sub>max</sub> = 1 / (s + (1&minus;s)/p). Its significance: even infinite processors cap speedup at 1/s, so the serial part limits scaling.</p>
+
+<h3 id="sug-10">10. 20% sequential program — max speedup</h3>
+<p>With s = 0.20 and p → ∞, S<sub>max</sub> = 1 / (0.20 + 0.80/p) → 1 / 0.20 = 5.</p>
+<div class="key">Maximum speedup = <strong>5×</strong>.</div>
+
+<h3 id="sug-11">11. Task vs data parallelism</h3>
+<p>Task parallelism runs different operations concurrently on (possibly) the same or different data, e.g. a pipeline where one thread decodes and another renders. Data parallelism applies the same operation to many data elements at once, e.g. adding two large vectors element-wise across threads.</p>
+
+<h3 id="sug-12">12. SIMD vs MIMD</h3>
+<p>SIMD has one instruction stream applied to many data lanes in lockstep (vector units, GPUs). MIMD has multiple independent instruction streams over multiple data streams (multicore CPUs, clusters), allowing each core to run different code.</p>
+
+<h3 id="sug-13">13. Parallel max</h3>
+<p>(see <a href="#sample-3m">Part 4(m)</a>) Split into p chunks for local maxima, then tree-reduce, for T<sub>p</sub> = O(n/p + log p).</p>
+
+<h3 id="sug-14">14. Parallel matrix multiplication</h3>
+<p>(see <a href="#s2q8">Final 2024/25 · Q8</a>) Each output element C[i][j] is an independent dot product, so rows/blocks are assigned to threads; work O(n<sup>3</sup>), span O(log n) with a parallel reduction per element.</p>
+
+<h3 id="sug-15">15. Parallel reduction and prefix sum</h3>
+<p>(see <a href="#s2q9">Final 2024/25 · Q9(d)</a>) Both use a balanced tree of associative operations: reduction in O(log n) depth / O(n) work, and scan (Blelloch) in the same bounds.</p>
+
+<h3 id="sug-16">16. Load balancing</h3>
+<p>Load balancing distributes work evenly so no processor idles while others are overloaded, which is essential for good speedup. Static balancing partitions work up front (good for uniform tasks); dynamic balancing assigns work at runtime, often via a shared queue or work stealing for irregular tasks.</p>
+
+<h3 id="sug-17">17. Parallel merge sort</h3>
+<p>(see <a href="#s1q3">Final 2022/23 · Q3</a>) Fork-join sorts the halves in parallel and merges them; work O(n log n), span O(log<sup>2</sup>n) with parallel merge.</p>
+
+<h3 id="sug-18">18. Parallel odd-even transposition sort</h3>
+<p>On n elements it alternates odd and even phases; in each phase all adjacent (i, i+1) pairs are compared-and-swapped in parallel. After n phases the array is sorted, giving O(n) parallel steps with n/2 comparators each.</p>
+
+<h3 id="sug-19">19. Parallel shear sort</h3>
+<p>On a √n × √n mesh, it alternates sorting all rows (snake order) and all columns. After O(log n) such round-trips the mesh is fully sorted in row-major snake order, for total time O(√n · log n).</p>
+
+<h3 id="sug-20">20. Parallel broadcast / enumeration sort</h3>
+<p>Enumeration (rank) sort computes, for each element, how many others are smaller by comparing all pairs in parallel; that count is the element's final position. The values are then broadcast/scattered into their ranked slots, sorting in O(log n) depth with O(n<sup>2</sup>) work.</p>
+
+<h3 id="sug-21">21. Parallel vs sequential quicksort</h3>
+<p>(see <a href="#sample-3n">Part 4(n)</a>) Same O(n log n) work, but concurrent quicksort sorts partitions on separate tasks for ~O(log n) depth and 2–8× speedup, with a sequential cutoff for small arrays.</p>
+
+<h3 id="sug-22">22. GPU computing; CPU vs GPU</h3>
+<p>GPUs run thousands of lightweight threads in SIMD groups for massive data parallelism, ideal for regular, arithmetic-heavy workloads. CPUs have few powerful cores with large caches and branch prediction, optimized for latency and complex control flow, whereas GPUs optimize throughput.</p>
+
+<h3 id="sug-23">23. Communication overhead in distributed systems</h3>
+<p>Communication overhead is the time spent sending/receiving messages (latency + bandwidth) and synchronizing, rather than computing. It grows with the number of nodes and message frequency and can dominate runtime, so algorithms aim to minimize and overlap communication with computation.</p>
+
+<h3 id="sug-24">24. Concurrent queue design</h3>
+<p>A concurrent queue must serialize concurrent enqueue/dequeue operations: a lock-based design uses a mutex (or separate head/tail locks) but can contend, while a lock-free design uses compare-and-swap. Lock-free queues must guard against the ABA problem (a pointer reused between reads), typically with tagged pointers or hazard pointers.</p>
+
+<h3 id="sug-25">25. Parallel complexity of a reduction/sum</h3>
+<p>A tree-based reduction combines pairs at each level, so it finishes in O(log n) depth while performing O(n) total additions. This is work-optimal with logarithmic span.</p>
+
+<h3 id="sug-26">26. Parallel search in a sorted array</h3>
+<p>With p processors, p-ary search picks p splitters that divide the range into p+1 parts, compares the target against all p in parallel, and recurses into the one sub-range that may contain it. This reduces the depth to O(log n / log p) probes.</p>
+
+<h3 id="sug-27">27. Parallel graph traversal</h3>
+<p>Level-synchronous parallel BFS processes one frontier at a time, expanding all its vertices' neighbors in parallel before moving to the next level. DFS is hard to parallelize because its strict depth-first order is inherently sequential.</p>
+
+<h3 id="sug-28">28. OpenMP vs MPI</h3>
+<p>OpenMP targets shared-memory machines, parallelizing loops/regions with compiler pragmas over threads in one address space. MPI targets distributed memory, with separate processes that cooperate by explicit message passing (send/recv, collectives).</p>
+
+<h3 id="sug-29">29. Pseudocode for parallel matrix addition</h3>
+<p>Every output element is an independent element-wise sum, so all (i, j) can be computed at once.</p>
+<pre>PARALLEL_MATRIX_ADD(A, B, n):
+    parallel for i in 0..n-1:
+        parallel for j in 0..n-1:
+            C[i][j] = A[i][j] + B[i][j]
+    return C</pre>
+<div class="key">Work <span class="complexity">O(n<sup>2</sup>)</span>, depth <span class="complexity">O(1)</span>.</div>
+
+<h3 id="sug-30">30. Work stealing in task scheduling</h3>
+<p>Each worker keeps its own deque of tasks, pushing/popping from one end; when a worker runs out it steals a task from the opposite end of a busy worker's deque. This balances load dynamically with low contention and is the basis of fork-join schedulers.</p>
+
+<h3 id="sug-31">31. Consistency models</h3>
+<p>Consistency models define what ordering of memory operations threads may observe. Sequential consistency requires a single global order matching each thread's program order; causal consistency only orders causally related operations; eventual consistency allows temporary divergence that converges once updates stop.</p>
+
+<h3 id="sug-32">32. Why linear speedup is hard</h3>
+<p>Linear speedup is rarely achieved because the sequential fraction caps gains (Amdahl), and real systems add parallelization overhead, inter-processor communication, lock/resource contention, and load imbalance. Together these losses make S grow sub-linearly and eventually plateau.</p>
+
+</section>
+
+</body>
+</html>
